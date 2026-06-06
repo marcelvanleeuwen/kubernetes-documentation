@@ -273,4 +273,3 @@ kubeadm join (command showed during kubadm init)
 ```sh
 kubectl label node k8s-worker-1 node.role.kubernetes.io/worker=worker
 ```
-<i>For some reason the "roles" doesn't change after this command</i>
