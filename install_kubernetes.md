@@ -33,6 +33,9 @@ Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubunt
 </ul>
 <br>
 
+#### Update Ubuntu Server
+<br>
+
 ```sh
 sudo apt-get update && sudo apt-get upgrade -y 
 ```
@@ -114,7 +117,7 @@ sudo apt-get install docker.io containerd
 
 
 #### containerd config
-
+<br>
 Check if SystemdCgroup = true
 
 ```sh
@@ -127,7 +130,9 @@ if false do
 sudo mkdir -p /etc/containerd
 ```
 
+```sh
 containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
+```
 
 ```sh
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
