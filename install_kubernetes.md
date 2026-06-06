@@ -102,14 +102,6 @@ sudo sysctl --system
 ```
 <br>
 
-<li>Check hostname</li>
-<br>
-```sh
-sysctl net.bridge.bridge-nf-call-iptables
-sysctl net.ipv4.ip_forward
-sysctl net.bridge.bridge-nf-call-ip6tables
-```
-<br>
 #### install containerd
 <br>
 
@@ -121,44 +113,51 @@ sudo apt-get install docker.io containerd
 
 #### containerd config
 <br>
-Check if SystemdCgroup = true
+
+<li>Check if SystemdCgroup = true</li>
+<br>
 
 ```sh
 sudo containerd config dump | grep SystemdCgroup
 ```
 
-if false do
+<li>if false do</li>
+<br>
 
 ```sh
 sudo mkdir -p /etc/containerd
 ```
-
 ```sh
 containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
 ```
-
 ```sh
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 ```
-
 ```sh
 sudo containerd config dump | grep SystemdCgroup
 ```
+<br>
 
-if true proceed futher
+<li>if true proceed futher</li>
+<br>
 
 ```sh
 sudo systemctl start containerd
 ```
 
 #### install kubernetes packages
+<br>
 
-check latest release
+<li>check latest release</li>
+
 ```sh
 curl -L -s https://dl.k8s.io/release/stable.txt
 ```
+<br>
 
-add repo
+<li>add repo, adjust version</li>
+<br>
+
 ```sh
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 ```
@@ -166,7 +165,9 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key | sudo gpg --
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 ```
 
-check if repo is added
+<li>check if repo is added</li>
+<br>
+
 ```sh
 cat /etc/apt/sources.list.d/kubernetes.list
 ```
@@ -176,12 +177,12 @@ output:
 deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /
 ```
 
-Install Kubernetes
+#### Install Kubernetes
+<br>
 
 ```sh
 sudo apt install -y kubelet kubeadm kubectl
 ```
-
 ```sh
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
