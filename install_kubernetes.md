@@ -112,33 +112,32 @@ sudo apt-get install docker.io containerd
 ```
 <br>
 
+
 #### containerd config
 <br>
-
-### Check if SystemdCgroup = true
-
+Check if SystemdCgroup = true
+```sh
 sudo containerd config dump | grep SystemdCgroup
-
+```
+<br>
 if false do
-
+<br>
 ```sh
 sudo mkdir -p /etc/containerd
 ```
-
+<br>
 containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
-
+<br>
 ```sh
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 ```
-
+<br>
 ```sh
 sudo containerd config dump | grep SystemdCgroup
 ```
-
+<br>
 if true proceed futher
-
-
-
+<br>
 ```sh
 sudo systemctl start containerd
 ```
