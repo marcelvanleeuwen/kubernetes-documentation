@@ -76,11 +76,11 @@ sudo sed -i '/\sswap\s/ s/^\(.*\)$/#\1/g' /etc/fstab
 ```sh
 echo -e "overlay\nbr_netfilter" | sudo tee /etc/modules-load.d/containerd.conf > /dev/null
 ```
-<br>
 
 ```sh
 sudo modprobe overlay
 ```
+
 ```sh
 sudo modprobe br_netfilter
 ```
