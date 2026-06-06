@@ -25,6 +25,10 @@ Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubunt
 <ul>
   <li>Install Ubuntu Server</li>
   <li>Set static ip during installation</li>
+  <li>Set time</li>
+  ```sh
+  sudo timedatectl set-timezone Europe/Amsterdam
+  ```
   <li>Reboot</li>
 </ul>
 <ul>
@@ -220,25 +224,43 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 <br>
 
+#### Install CNI (Flannel) via manifest
+<br>
 
+```sh
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+```
+<br>
+<li>Check if Flannel is running</li>
+<br>
 
+```sh
+kubectl get pods -n kube-flannel
+```
+<br>
 
+#### Install MetalLB via manifest
+<br>
 
+```sh
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.16.1/config/manifests/metallb-native.yaml
+```
+<br>
 
-
-
-
-
+<li>Check version installed</li>
+```sh
+kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template.spec.containers[0].image}'
+```
+<br>
 
 #### COMMAND TO ADD A WORKER NODE
 <br>
 
 ```sh
-kubeadm token create --print-join-command --ttl 0
+kubeadm join (command showed during kubadm init)
 ```
-<br>
-Use output to add node. So execute this command on the node to add.
-<br>
+<i>example: kubeadm join 192.168.1.3:6443 --token s2qk11.mjmkdghtjklicwqrquz9l \
+	--discovery-token-ca-cert-hash sha256:c8183f87425a00639c345cv7fc247fe5g3h7324cbe80e02e3601ca5135dc66<i>
 <br>
 
 #### Change roles label

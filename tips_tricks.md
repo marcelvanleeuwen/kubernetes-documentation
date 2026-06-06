@@ -1,6 +1,17 @@
 # Tips & Trick
 <br>
 
+#### Add role to node
+<br>
+
+```sh
+kubectl label node k8s-worker node-role.kubernetes.io/worker=
+```
+```sh
+kubectl get nodes
+```
+<br>
+
 ### Connect old k8s-worker to new control plane
 <br>
 Remove old configuration data
