@@ -1,6 +1,37 @@
 # Tips & Trick
 <br>
 
+#### Install kubectl and control your cluster from MacOS.
+
+<li>Install Kubectl</li>
+<br>
+
+```sh
+brew install kubectl
+```
+<br>
+
+```sh
+mkdir -p /Users/{username}/.kube
+```
+<br>
+
+<li>Copy config file to MacOS</li>
+<br>
+
+```sh
+scp sysopmarcel@192.168.x.xxx:~/.kube/config ~/.kube/config
+```
+<br>
+
+<li>Test</li>
+<br>
+
+```sh
+kubectl get nodes
+```
+<br>
+
 #### Change roles label
 <br>
 
@@ -132,14 +163,6 @@ fi
 
 # kubectl completion
 source <(kubectl completion bash)
-```
-<br>
-
-##### Install Kubectl
-<br>
-
-```sh
-brew install kubectl
 ```
 <br>
 
