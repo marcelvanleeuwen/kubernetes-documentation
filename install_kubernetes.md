@@ -49,6 +49,7 @@ sudo hostnamectl set-hostname "new-hostname"
 ```
 <i>example: k8s-cp-1</i>
 <br>
+<br>
 
 #### Check hostname
 <br>
@@ -56,6 +57,7 @@ sudo hostnamectl set-hostname "new-hostname"
 ```sh
 hostname
 ```
+<br>
 
 #### disable linux swap and remove any existing swap partitions
 <br>
