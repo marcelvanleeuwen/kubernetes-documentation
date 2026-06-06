@@ -264,7 +264,7 @@ kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template
 kubeadm join (command showed during kubadm init)
 ```
 <i>example: kubeadm join 192.168.1.3:6443 --token s2qk11.mjmkdghtjklicwqrquz9l \
-	--discovery-token-ca-cert-hash sha256:c8183f87425a00639c345cv7fc247fe5g3h7324cbe80e02e3601ca5135dc66<i>
+	--discovery-token-ca-cert-hash sha256:c8183f87425a00639c345cv7fc247fe5g3h7324cbe80e02e3601ca5135dc66</i>
 <br>
 
 #### Change roles label
