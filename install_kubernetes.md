@@ -30,7 +30,7 @@ Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubunt
   ```sh
   sudo timedatectl set-timezone Europe/Amsterdam
   ```
-  
+
   <li>Reboot</li>
 </ul>
 <ul>
@@ -250,6 +250,7 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.16.1/confi
 <br>
 
 <li>Check version installed</li>
+
 ```sh
 kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template.spec.containers[0].image}'
 ```
