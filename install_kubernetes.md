@@ -250,13 +250,14 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.16.1/confi
 <br>
 
 <li>Check version installed</li>
+<br>
 
 ```sh
 kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template.spec.containers[0].image}'
 ```
 <br>
 
-#### COMMAND TO ADD A WORKER NODE
+#### Add worker to control plane
 <br>
 
 ```sh
