@@ -26,9 +26,11 @@ Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubunt
   <li>Install Ubuntu Server</li>
   <li>Set static ip during installation</li>
   <li>Set time</li>
+  
   ```sh
   sudo timedatectl set-timezone Europe/Amsterdam
   ```
+  
   <li>Reboot</li>
 </ul>
 <ul>
