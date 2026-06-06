@@ -177,9 +177,8 @@ cat /etc/apt/sources.list.d/kubernetes.list
 ```
 
 output:
-```sh
-deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /
-```
+<br>
+<i>deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /</i>
 <br>
 
 #### Install Kubernetes
