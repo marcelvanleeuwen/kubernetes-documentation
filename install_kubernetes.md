@@ -41,7 +41,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 ```
 <br>
 
-<li>Set hostname</li>
+#### Set hostname
 <br>
 
 ```sh
@@ -50,12 +50,13 @@ sudo hostnamectl set-hostname "new-hostname"
 <i>example: k8s-cp-1</i>
 <br>
 
-<li>Check hostname</li>
+#### Check hostname
 <br>
+
 ```sh
 hostname
 ```
-<br>
+
 #### disable linux swap and remove any existing swap partitions
 <br>
 
