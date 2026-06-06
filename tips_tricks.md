@@ -1,7 +1,7 @@
 # Tips & Trick
 <br>
 
-#### Add role to node
+#### Change roles label
 <br>
 
 ```sh
