@@ -12,7 +12,7 @@ kubectl get nodes
 ```
 <br>
 
-### Connect old k8s-worker to new control plane
+#### Connect old k8s-worker to new control plane
 <br>
 Remove old configuration data
 
@@ -48,7 +48,7 @@ Use output to add node. So execute this command on the node to add.
 <br>
 
 
-### Install Bash 5.x, Bash Completion, KubeCtl on MacOS
+#### Install Bash 5.x, Bash Completion, KubeCtl on MacOS
 <br>
 
 ##### Install HomeBrew
@@ -159,7 +159,7 @@ source <(kubectl completion bash)
 ```
 <br>
 
-### Add an alias to shorten the kubectl command
+#### Add an alias to shorten the kubectl command
 
 add the folowing to ~/.bashrc
 
