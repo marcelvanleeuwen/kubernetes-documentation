@@ -180,6 +180,14 @@ cat /etc/apt/sources.list.d/kubernetes.list
 <br>
 <br>
 
+<li>Update repositories</li>
+<br>
+
+```sh
+sudo apt update
+```
+<br>
+
 #### Install Kubernetes
 <br>
 
