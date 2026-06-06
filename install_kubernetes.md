@@ -102,7 +102,7 @@ sudo sysctl --system
 ```
 <br>
 
-#### install containerd
+#### Install containerd
 <br>
 
 ```sh
@@ -111,7 +111,7 @@ sudo apt-get install docker.io containerd
 <br>
 
 
-#### containerd config
+#### Set containerd config
 <br>
 
 <li>Check if SystemdCgroup = true</li>
@@ -120,6 +120,7 @@ sudo apt-get install docker.io containerd
 ```sh
 sudo containerd config dump | grep SystemdCgroup
 ```
+<br>
 
 <li>if false do</li>
 <br>
@@ -146,7 +147,7 @@ sudo systemctl start containerd
 ```
 <br>
 
-#### install kubernetes packages
+#### Install kubernetes packages
 <br>
 
 <li>check latest release</li>
