@@ -225,18 +225,19 @@ Alternatively, if you are the root user, you can run:
 export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 <br>
-
+<br>
 if you set by accident "export KUBECONFIG=/etc/kubernetes/admin.conf" and are not root user you get an error.
 <br>
-<i>
-example: error: error loading config file "/etc/kubernetes/admin.conf": open /etc/kubernetes/admin.conf: permission denied
-</i>
+
+<i>example: error: error loading config file "/etc/kubernetes/admin.conf": open /etc/kubernetes/admin.conf: permission denied</i>
 <br>
+
 you can fix this by executing the following command:
 <br>
 ```sh
 unset KUBECONFIG
 ```
+<br>
 
 #### Install CNI (Flannel) via manifest
 <br>
