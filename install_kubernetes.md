@@ -1,7 +1,7 @@
 # Install Kubernetes bare metal
 <br>
 
-#### Before you begin
+### Before you begin:
 <br>
 <ul>
   <li>A compatible Linux host (I use the prefered OS Ubuntu LTS 26.04 because most</li>
@@ -14,13 +14,13 @@
 </ul>
 <br>
 
-#### Prefered OS 
+### Prefered OS: 
 <br>
 Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubuntu</i>)
 <br>
 <br>
 
-#### Install Ubuntu Server
+### Install Ubuntu Server:
 <br>
 <ul>
   <li>Install Ubuntu Server</li>
@@ -39,7 +39,7 @@ Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubunt
 </ul>
 <br>
 
-#### Update Ubuntu Server
+### Update Ubuntu Server:
 <br>
 
 ```sh
@@ -47,7 +47,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 ```
 <br>
 
-#### Set hostname
+### Set hostname:
 <br>
 
 ```sh
@@ -65,7 +65,7 @@ hostname
 ```
 <br>
 
-#### disable linux swap and remove any existing swap partitions
+### disable linux swap and remove any existing swap partitions:
 <br>
 
 ```sh
@@ -76,7 +76,7 @@ sudo sed -i '/\sswap\s/ s/^\(.*\)$/#\1/g' /etc/fstab
 ```
 <br>
 
-#### Setting up container runtime prereq
+### Setting up container runtime prereq:
 <br>
 
 ```sh
@@ -92,7 +92,7 @@ sudo modprobe br_netfilter
 ```
 <br>
 
-#### Setup required sysctl params, these persist across reboots.
+### Setup required sysctl params, these persist across reboots:
 <br>
 
 ```sh
@@ -100,7 +100,7 @@ echo -e "net.bridge.bridge-nf-call-iptables = 1\nnet.ipv4.ip_forward = 1\nnet.br
 ```
 <br>
 
-#### Apply sysctl params without reboot
+### Apply sysctl params without reboot:
 <br>
 
 ```sh
@@ -108,7 +108,7 @@ sudo sysctl --system
 ```
 <br>
 
-#### Install containerd
+### Install containerd:
 <br>
 
 ```sh
@@ -117,7 +117,7 @@ sudo apt-get install docker.io containerd
 <br>
 
 
-#### Set containerd config
+### Set containerd config:
 <br>
 
 <li>Check if SystemdCgroup = true</li>
@@ -153,7 +153,7 @@ sudo systemctl start containerd
 ```
 <br>
 
-#### Install kubernetes packages
+### Install kubernetes packages:
 <br>
 
 <li>check latest release</li>
@@ -194,7 +194,7 @@ sudo apt update
 ```
 <br>
 
-#### Install Kubernetes
+### Install Kubernetes:
 <br>
 
 ```sh
@@ -226,10 +226,9 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 
 <br>
-if you set by accident "export KUBECONFIG=/etc/kubernetes/admin.conf" and are not root user you get an error.
+if you set by accident "export KUBECONFIG=/etc/kubernetes/admin.conf" and are not root user you get an error.<br>
 <br>
-<i>example: error: error loading config file "/etc/kubernetes/admin.conf": open /etc/kubernetes/admin.conf: permission denied</i>
-
+<i>example: error: error loading config file "/etc/kubernetes/admin.conf": open /etc/kubernetes/admin.conf: permission denied</i><br>
 <br>
 you can fix this by executing the following command:
 <br>
@@ -239,14 +238,14 @@ unset KUBECONFIG
 ```
 <br>
 
-#### Install CNI (Flannel) via manifest
+### Install CNI (Flannel) via manifest:
 <br>
 
 ```sh
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 <br>
-<li>Check if Flannel is running</li>
+Check if Flannel is running<br>
 <br>
 
 ```sh
@@ -254,7 +253,17 @@ kubectl get pods -n kube-flannel
 ```
 <br>
 
-#### Install MetalLB via manifest
+### Uninstall Flannel:
+<br>
+
+```sh
+kubectl delete -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+```
+
+
+
+
+### Install MetalLB via manifest:
 <br>
 
 ```sh
@@ -270,19 +279,12 @@ kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template
 ```
 <br>
 
-#### Add worker to control plane
+### Add worker to control plane:
 <br>
 
 ```sh
-kubeadm join (command showed during kubadm init)
+sudo kubeadm join (command showed during kubadm init)
 ```
-<i>example: kubeadm join 192.168.1.3:6443 --token s2qk11.mjmkdghtjklicwqrquz9l \
-	--discovery-token-ca-cert-hash sha256:c8183f87425a00639c345cv7fc247fe5g3h7324cbe80e02e3601ca5135dc66</i>
 <br>
-
-#### Change roles label
+<i>example: sudo kubeadm join 192.168.1.3:6443 --token s2qk11mjmkdghtjklicwqrquz9l --discovery-token-ca-cert-hash sha256:c8183f87425a00639c345cv7fc247fe5g3h7324cbe80e02e3601ca5135dc66</i>
 <br>
-
-```sh
-kubectl label node k8s-worker-1 node.role.kubernetes.io/worker=worker
-```
