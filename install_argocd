@@ -1,15 +1,6 @@
-# Install Argo CD
+# Install Argocd
 <br>
-Install Argo CD CLI on MacOS
-<br>
-<br>
-
-```sh
-brew install argocd
-```
-
-<br>
-Install Argo CD on k8s cluster:
+Install ArgoCD on k8s cluster
 <br>
 <br>
 
@@ -34,22 +25,4 @@ The initial password for the admin account is auto-generated and stored as cle
 
 ```sh
 argocd admin initial-password -n argocd
-```
-<br>
-
-Login via the CLI:
-<br>
-<br>
-
-```sh
-argocd login localhost:8080 --insecure
-```
-<br>
-
-Add repo:
-<br>
-<br>
-
-```sh
-argocd repo add git@github.com:repo/repo.git --ssh-private-key-path ~/.ssh/id_ed25519 --upsert
 ```

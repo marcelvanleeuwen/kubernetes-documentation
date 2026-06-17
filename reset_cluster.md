@@ -1,6 +1,6 @@
 # Reset Kubernetes cluster
 <br>
-<br>
+
 On each node do:<br>
 <br>
 

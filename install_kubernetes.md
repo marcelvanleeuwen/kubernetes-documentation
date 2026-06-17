@@ -1,5 +1,58 @@
 # Install Kubernetes bare metal
 <br>
+Install Kubectl CLI on MacOS:
+<br>
+<br>
+
+```sh
+brew install kubectl
+```
+<br>
+<br>
+
+Displays the shell you are currently using
+
+```sh
+echo $SHELL
+```
+<br>
+<br>
+
+If you use zsh:
+
+```sh
+echo 'source <(kubectl completion zsh)' >> ~/.zshrc
+source ~/.zshrc
+```
+<br>
+<br>
+
+Install zsh completions:
+
+```sh
+brew install zsh-completions
+```
+<br>
+<br>
+
+Reload:
+
+```sh
+source ~/.zshrc
+```
+<br>
+<br>
+Creates a k alias for kubectl and enables tab completion for the alias.
+<br>
+<br>
+
+```sh
+echo 'alias k=kubectl' >> ~/.zshrc
+echo 'complete -F __start_kubectl k' >> ~/.zshrc
+```
+
+
+
 
 ### Before you begin:
 <br>
