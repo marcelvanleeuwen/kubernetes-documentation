@@ -17,6 +17,10 @@ A homelab is a great place to build, break, and fix things and to keep learning.
 <br>
 [Install Kubernetes bare metal](install_kubernetes.md)
 
+[Install Argo CD](install_argo_cd.md)
+
+[Reset cluster](reset_cluster.md)
+
 [Cheat sheet](cheat_sheet.md)
 
 [Tips & Tricks](tips_tricks.md)
