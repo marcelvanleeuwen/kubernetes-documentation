@@ -1,6 +1,6 @@
-# Install Kubernetes bare metal
+# Install Kubernetes on bare metal.
 <br>
-Install Kubectl CLI on MacOS:
+Install kubectl on macOS (management machine):
 <br>
 <br>
 
@@ -27,28 +27,13 @@ source ~/.zshrc
 <br>
 <br>
 
-Install zsh completions:
-
-```sh
-brew install zsh-completions
-```
-<br>
-<br>
-
-Reload:
-
-```sh
-source ~/.zshrc
-```
-<br>
-<br>
-Creates a k alias for kubectl and enables tab completion for the alias.
+Creates a k alias for kubectl.
 <br>
 <br>
 
 ```sh
 echo 'alias k=kubectl' >> ~/.zshrc
-echo 'complete -F __start_kubectl k' >> ~/.zshrc
+source ~/.zshrc
 ```
 
 
@@ -165,7 +150,8 @@ sudo sysctl --system
 <br>
 
 ```sh
-sudo apt-get install docker.io containerd
+sudo apt-get update
+sudo apt-get install -y containerd
 ```
 <br>
 
@@ -198,15 +184,16 @@ sudo containerd config dump | grep SystemdCgroup
 ```
 <br>
 
-<li>if true proceed futher</li>
+<li>Check / if true proceed futher / if not true do the steps above</li>
 <br>
 
 ```sh
-sudo systemctl start containerd
+sudo systemctl enable --now containerd
+sudo systemctl restart containerd
 ```
 <br>
 
-### Install kubernetes packages:
+### Add kubernetes repository:
 <br>
 
 <li>check latest release</li>
@@ -247,11 +234,14 @@ sudo apt update
 ```
 <br>
 
-### Install Kubernetes:
+### Install Kubernetes packages:
 <br>
 
 ```sh
 sudo apt install -y kubelet kubeadm kubectl
+```
+```sh
+sudo apt-mark hold kubelet kubeadm kubectl
 ```
 ```sh
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
@@ -292,6 +282,7 @@ unset KUBECONFIG
 <br>
 
 ### Install CNI (Flannel) via manifest:
+## Flannel is a simple CNI plugin suitable for homelabs, learning environments, and small Kubernetes clusters. For       production environments, consider alternatives such as Cilium or Calico, depending on your networking and security requirements.
 <br>
 
 ```sh
@@ -301,6 +292,9 @@ kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/
 Check if Flannel is running<br>
 <br>
 
+```sh
+kubectl get nodes
+```
 ```sh
 kubectl get pods -n kube-flannel
 ```
@@ -317,6 +311,7 @@ kubectl delete -f https://github.com/flannel-io/flannel/releases/latest/download
 
 
 ### Install MetalLB via manifest:
+## MetalLB is a commonly used load balancer implementation for bare-metal Kubernetes clusters. Kubernetes does not include a load balancer for bare-metal environments by default. MetalLB provides external IP addresses for Services of type LoadBalancer.
 <br>
 
 ```sh
