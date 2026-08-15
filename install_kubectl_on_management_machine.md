@@ -1,7 +1,9 @@
 # Install kubectl on management machine:
 <br>
 
-### MacOS
+### macOS:
+
+This section describes how to install and configure kubectl on a macOS management machine.
 
 ```sh
 brew install kubectl
@@ -10,7 +12,7 @@ brew install kubectl
 kubectl version --client
 ```
 <br>
-Check which shell you are using
+Check which shell you are using:
 
 ```sh
 echo $SHELL
