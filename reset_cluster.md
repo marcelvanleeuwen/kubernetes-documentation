@@ -1,8 +1,9 @@
-# Reset Kubernetes cluster
+# Reset Kubernetes cluster:
 <br>
+Warning: These commands permanently remove Kubernetes cluster configuration and local workload data from the node.
 
-On each node do:<br>
-<br>
+
+### Run the following steps on every control-plane and worker node:
 
 ```sh
 sudo kubeadm reset -f
@@ -20,6 +21,8 @@ sudo rm -rf /etc/kubernetes
 sudo rm -rf /var/lib/etcd
 ```
 
+Run this command only on control-plane nodes, as etcd data is stored there.
+
 ```sh
 sudo rm -rf /var/lib/kubelet
 ```
@@ -35,10 +38,8 @@ sudo rm -rf /etc/cni
 sudo rm -rf $HOME/.kube
 ```
 <br>
-<br>
 
-Clean network:<br>
-<br>
+### Remove CNI network interfaces:
 
 ```sh
 sudo ip link delete cni0 2>/dev/null
@@ -52,10 +53,10 @@ sudo ip link delete flannel.1 2>/dev/null
 sudo ip link delete kube-ipvs0 2>/dev/null
 ```
 <br>
-<br>
 
-Clean iptables:<br>
-<br>
+### Clean iptables:<br>
+
+Warning: The following commands remove all iptables rules on the node, including rules unrelated to Kubernetes.
 
 ```sh
 sudo iptables -F
@@ -72,19 +73,9 @@ sudo iptables -t mangle -F
 ```sh
 sudo iptables -X
 ```
-
-```sh
-sudo systemctl start containerd
-```
-
-```sh
-sudo systemctl start kubelet
-```
-<br>
 <br>
 
-Reboot all nodes:<br>
-<br>
+### Reboot each node:
 
 ```sh
 sudo reboot
