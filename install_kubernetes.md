@@ -46,7 +46,7 @@ source ~/.zshrc
 </ul>
 <br>
 
-### Preferred Operating system: 
+### Preferred Operating System: 
 
 Ubuntu Server LTS 26.04
 <br>
@@ -93,7 +93,7 @@ hostname
 ```
 <br>
 
-### disable linux swap:
+### Disable linux swap:
 
 ```sh
 sudo swapoff -a
@@ -149,7 +149,7 @@ sudo apt-get install -y containerd
 
 ### Configure containerd:
 
-<li>Check whether SystemdCgroup is set to true</li>
+Check whether SystemdCgroup is set to true.
 <br>
 
 ```sh
@@ -157,7 +157,7 @@ sudo containerd config dump | grep SystemdCgroup
 ```
 <br>
 
-<li>If the output is not SystemdCgroup = true, run the following commands</li>
+If the output is not SystemdCgroup = true, run the following commands.
 <br>
 
 ```sh
@@ -171,7 +171,7 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/conf
 ```
 <br>
 
-<li>Check / if true proceed futher / if not true do the steps above</li>
+Enable and start containerd, then verify the active configuration.
 <br>
 
 ```sh
