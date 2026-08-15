@@ -1,39 +1,4 @@
 # Install Kubernetes on bare metal:
-<br>
-### Install kubectl on macOS (management machine):
-<br>
-<br>
-
-```sh
-brew install kubectl
-```
-```sh
-kubectl version --client
-```
-<br>
-Check which shell you are using
-
-```sh
-echo $SHELL
-```
-<br>
-
-If you use zsh:
-
-```sh
-echo 'source <(kubectl completion zsh)' >> ~/.zshrc
-source ~/.zshrc
-```
-<br>
-
-Creates a k alias for kubectl.
-<br>
-
-```sh
-echo 'alias k=kubectl' >> ~/.zshrc
-source ~/.zshrc
-```
-<br>
 
 ### Before you begin:
 <ul>
@@ -93,7 +58,7 @@ hostname
 ```
 <br>
 
-### Disable linux swap:
+### Disable Linux Swap:
 
 ```sh
 sudo swapoff -a
@@ -184,7 +149,7 @@ sudo containerd config dump | grep SystemdCgroup
 ```
 <br>
 
-### Add kubernetes repository:
+### Add Kubernetes repository:
 
 This guide uses Kubernetes v1.36. If you use a different Kubernetes minor version, update the repository URL accordingly.
 <br>
@@ -263,125 +228,13 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 
 <br>
-if you set by accident "export KUBECONFIG=/etc/kubernetes/admin.conf" and are not root user you get an error.<br>
-<br>
 <i>example: error: error loading config file "/etc/kubernetes/admin.conf": open /etc/kubernetes/admin.conf: permission denied</i><br>
 <br>
-you can fix this by executing the following command:
+If you accidentally set KUBECONFIG as a regular user, you may get a permission error. Remove it with:
 <br>
 
 ```sh
 unset KUBECONFIG
-```
-<br>
-
-### Install the Flannel CNI plugin:
-
-Flannel is a simple CNI plugin suitable for homelabs, learning environments, and small Kubernetes clusters. For       production environments, consider alternatives such as Cilium or Calico, depending on your networking and security requirements.
-<br>
-
-```sh
-kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-```
-<br>
-Verify that Flannel is running.
-<br>
-
-```sh
-kubectl get nodes
-```
-All nodes should show the status Ready.
-
-```sh
-kubectl get pods -n kube-flannel
-```
-All Flannel pods should show the status Running.
-<br>
-
-### Uninstall Flannel:
-
-```sh
-kubectl delete -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-```
-<br>
-
-### Install MetalLB:
-
-MetalLB is a commonly used load balancer implementation for bare-metal Kubernetes clusters. Kubernetes does not include a load balancer for bare-metal environments by default. MetalLB provides external IP addresses for Services of type LoadBalancer.
-<br>
-
-```sh
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.16.1/config/manifests/metallb-native.yaml
-```
-<br>
-Verify the installed MetalLB version.
-```sh
-kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template.spec.containers[0].image}'
-```
-<br>
-
-Configure a MetalLB IP address pool.
-
-Choose a free IP range from your local network that is outside your DHCP pool. Replace <YOUR_FREE_IP_RANGE> in the manifest below before applying it.
-
-Create the file on the management machine where kubectl is configured. In this guide, the file is stored at ~/kubernetes-manifests/metallb-config.yaml.
-
-```sh
-mkdir -p ~/kubernetes-manifests
-```
-```sh
-nano ~/kubernetes-manifests/metallb-config.yaml
-```
-```yaml
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: lan-pool
-  namespace: metallb-system
-spec:
-  addresses:
-    - <YOUR_FREE_IP_RANGE>
----
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: lan-advertisement
-  namespace: metallb-system
-```
-
-```sh
-kubectl apply -f ~/kubernetes-manifests/metallb-config.yaml
-```
-
-```sh
-kubectl get ipaddresspools -n metallb-system
-```
-
-The output should show the lan-pool IP address pool. MetalLB can now assign addresses from the configured range to Services of type LoadBalancer.
-<br>
-
-### Test MetalLB with an example service:
-
-Deploy a test application and expose it using a Service of type LoadBalancer:
-```sh
-kubectl create deployment nginx --image=nginx
-```
-```sh
-kubectl expose deployment nginx --type=LoadBalancer --port=80
-```
-
-Verify that MetalLB assigned an external IP address:
-```sh
-kubectl get services
-```
-The nginx service should show an EXTERNAL-IP from the IP address range configured in lan-pool.
-
-To remove the test application after verification:
-```sh
-kubectl delete service nginx
-```
-```sh
-kubectl delete deployment nginx
 ```
 <br>
 
