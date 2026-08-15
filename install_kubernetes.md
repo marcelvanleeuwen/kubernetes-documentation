@@ -1,37 +1,35 @@
 # Install Kubernetes on bare metal:
 
 ### Before you begin:
-<ul>
-  <li>A compatible Linux host. This guide uses Ubuntu Server 26.04 LTS.</li>
-  <li>2GB or more RAM</li>
-  <li>2 CPUs or more for control plane machines</li>
-  <li>Full network connectivity</li>
-  <li>Unique hostname, MAC address</li>
-  <li>Required Kubernetes ports must be open between the control-plane and worker nodes</li>
-</ul>
+
+- A compatible Linux host. This guide uses Ubuntu Server 26.04 LTS.
+- 2GB or more RAM
+- 2 CPUs or more for control plane machines
+- Full network connectivity
+- Unique hostname, MAC address
+- Required Kubernetes ports must be open between the control-plane and worker nodes
 <br>
 
 ### Preferred Operating System: 
 
-Ubuntu Server LTS 26.04
+Ubuntu Server 26.04 LTS
 <br>
 
 ### Install Ubuntu Server:
 
-Perform the following steps on every control-plane and worker node before initializing or joining the cluster
-<ul>
-  <li>Install Ubuntu Server</li>
-  <li>Configure a static IP address during installation</li>
-  <li>Set the timezone</li>
+Perform the following steps on every control-plane and worker node before initializing or joining the cluster.
+
+- Install Ubuntu Server
+- Configure a static IP address during installation
+- Set the timezone
   
   ```sh
   sudo timedatectl set-timezone Europe/Amsterdam
   ```
 
-  <li>Reboot</li>
-  <li>Login</li>
-  <li>Update Ubuntu Server</li>
-</ul>
+- Reboot
+- Login
+- Update Ubuntu Server
 <br>
 
 ### Update Ubuntu Server:
@@ -50,7 +48,7 @@ sudo hostnamectl set-hostname "new-hostname"
 <i>example: k8s-cp-1</i>
 <br>
 
-Check hostname
+Check the hostname
 <br>
 
 ```sh
@@ -69,7 +67,7 @@ sudo sed -i '/\sswap\s/ s/^\(.*\)$/#\1/g' /etc/fstab
 ```sh
 swapon --show
 ```
-If the command returns no output, swap is disabled successfully
+If the command returns no output, swap is disabled successfully.
 <br>
 
 ### Set up container runtime prerequisites:
@@ -140,7 +138,7 @@ Enable and start containerd, then verify the active configuration.
 <br>
 
 ```sh
-sudo systemctl enable --now containerd
+sudo systemctl enable containerd
 sudo systemctl restart containerd
 ```
 <br>
@@ -154,7 +152,7 @@ sudo containerd config dump | grep SystemdCgroup
 This guide uses Kubernetes v1.36. If you use a different Kubernetes minor version, update the repository URL accordingly.
 <br>
 
-Add repo, adjust version.
+Add the repository. Adjust the version if necessary.
 <br>
 
 ```sh
