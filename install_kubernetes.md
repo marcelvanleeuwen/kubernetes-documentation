@@ -56,7 +56,7 @@ Ubuntu Server LTS 26.04
 Perform the following steps on every control-plane and worker node before initializing or joining the cluster
 <ul>
   <li>Install Ubuntu Server</li>
-  <li>Configure a static ip address during installation</li>
+  <li>Configure a static IP address during installation</li>
   <li>Set the timezone</li>
   
   ```sh
@@ -335,7 +335,7 @@ nano ~/kubernetes-manifests/metallb-config.yaml
 ```yaml
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
-metadatßa:
+metadata:
   name: lan-pool
   namespace: metallb-system
 spec:
@@ -398,8 +398,8 @@ sudo kubeadm token create --print-join-command
 ```
 Copy the generated kubeadm join command and run it on the worker node to add it to the cluster.
 
+On the control-plane node or management machine, verify that the worker node joined the cluster:
+
 ```sh
 kubectl get nodes
 ```
-
-After the control-plane node is initialized successfully, kubeadm displays a kubeadm join command. Save this command, as it is required to add worker nodes to the cluster. The join token expires after 24 hours; if it has expired, generate a new join command on the control-plane node.
