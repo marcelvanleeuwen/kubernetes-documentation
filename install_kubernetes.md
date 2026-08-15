@@ -1,4 +1,4 @@
-# Install Kubernetes on bare metal.
+# Install Kubernetes on bare metal:
 <br>
 ### Install kubectl on macOS (management machine):
 <br>
@@ -37,7 +37,7 @@ source ~/.zshrc
 
 ### Before you begin:
 <ul>
-  <li>A compatible Linux host. This guide uses Ubuntu Server 26.04 LTS."</li>
+  <li>A compatible Linux host. This guide uses Ubuntu Server 26.04 LTS.</li>
   <li>2GB or more RAM</li>
   <li>2 CPUs or more for control plane machines</li>
   <li>Full network connectivity</li>
@@ -46,7 +46,7 @@ source ~/.zshrc
 </ul>
 <br>
 
-### Prefered Operating system: 
+### Preferred Operating system: 
 
 Ubuntu Server LTS 26.04
 <br>
@@ -107,7 +107,7 @@ swapon --show
 If the command returns no output, swap is disabled successfully
 <br>
 
-### Set up container runtime prerequisites.
+### Set up container runtime prerequisites:
 
 Load the required kernel modules and configure them to load automatically after a reboot.
 <br>
@@ -125,14 +125,14 @@ sudo modprobe br_netfilter
 ```
 <br>
 
-### Configure required sysctl parameters. These persist across reboots.
+### Configure required sysctl parameters. These persist across reboots:
 
 ```sh
 echo -e "net.bridge.bridge-nf-call-iptables = 1\nnet.ipv4.ip_forward = 1\nnet.bridge.bridge-nf-call-ip6tables = 1" | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf > /dev/null
 ```
 <br>
 
-### Apply the sysctl parameters without rebooting.
+### Apply the sysctl parameters without rebooting:
 
 ```sh
 sudo sysctl --system
@@ -147,7 +147,7 @@ sudo apt-get install -y containerd
 ```
 <br>
 
-### Configure containerd.
+### Configure containerd:
 
 <li>Check whether SystemdCgroup is set to true</li>
 <br>
@@ -186,16 +186,12 @@ sudo containerd config dump | grep SystemdCgroup
 
 ### Add kubernetes repository:
 
-<li>This guide uses Kubernetes v1.36. If you use a different Kubernetes minor version, update the repository URL accordingly</li>
+This guide uses Kubernetes v1.36. If you use a different Kubernetes minor version, update the repository URL accordingly.
 <br>
 
-```sh
-curl -L -s https://dl.k8s.io/release/stable.txt
-```
+Add repo, adjust version.
 <br>
 
-<li>add repo, adjust version</li>
-<br>
 ```sh
 sudo apt-get install -y ca-certificates curl gpg
 ```
@@ -210,7 +206,7 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 ```
 <br>
 
-<li>Verify that the Kubernetes repository was added successfully</li>
+Verify that the Kubernetes repository was added successfully.
 <br>
 
 ```sh
@@ -219,9 +215,8 @@ cat /etc/apt/sources.list.d/kubernetes.list
 
 <i>example: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /</i>
 <br>
-<br>
 
-<li>Update the package index</li>
+Update the package index.
 <br>
 
 ```sh
@@ -280,7 +275,7 @@ unset KUBECONFIG
 ```
 <br>
 
-### Install the Flannel CNI plugin.
+### Install the Flannel CNI plugin:
 
 Flannel is a simple CNI plugin suitable for homelabs, learning environments, and small Kubernetes clusters. For       production environments, consider alternatives such as Cilium or Calico, depending on your networking and security requirements.
 <br>
@@ -310,7 +305,7 @@ kubectl delete -f https://github.com/flannel-io/flannel/releases/latest/download
 ```
 <br>
 
-### Install MetalLB
+### Install MetalLB:
 
 MetalLB is a commonly used load balancer implementation for bare-metal Kubernetes clusters. Kubernetes does not include a load balancer for bare-metal environments by default. MetalLB provides external IP addresses for Services of type LoadBalancer.
 <br>
@@ -332,6 +327,12 @@ Choose a free IP range from your local network that is outside your DHCP pool. R
 Create the file on the management machine where kubectl is configured. In this guide, the file is stored at ~/kubernetes-manifests/metallb-config.yaml.
 
 ```sh
+mkdir -p ~/kubernetes-manifests
+```
+```sh
+nano ~/kubernetes-manifests/metallb-config.yaml
+```
+```yaml
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadatßa:
@@ -359,7 +360,7 @@ kubectl get ipaddresspools -n metallb-system
 The output should show the lan-pool IP address pool. MetalLB can now assign addresses from the configured range to Services of type LoadBalancer.
 <br>
 
-### Test MetalLB with an example service
+### Test MetalLB with an example service:
 
 Deploy a test application and expose it using a Service of type LoadBalancer:
 ```sh
@@ -384,17 +385,21 @@ kubectl delete deployment nginx
 ```
 <br>
 
-### Add a worker node to the cluster.
+### Add a worker node to the cluster:
 
 Complete all node preparation steps on the worker node before joining it to the cluster.
+
+If you saved the kubeadm join command displayed during kubeadm init, use that command on the worker node.
+
+If you no longer have the command, or if its token has expired, generate a new join command on the control-plane node:
+
 ```sh
 sudo kubeadm token create --print-join-command
 ```
 Copy the generated kubeadm join command and run it on the worker node to add it to the cluster.
-```sh
-sudo kubeadm join (command showed during kubadm init)
-```
+
 ```sh
 kubectl get nodes
 ```
+
 After the control-plane node is initialized successfully, kubeadm displays a kubeadm join command. Save this command, as it is required to add worker nodes to the cluster. The join token expires after 24 hours; if it has expired, generate a new join command on the control-plane node.
