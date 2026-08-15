@@ -1,21 +1,21 @@
 # Install Kubernetes on bare metal.
 <br>
-Install kubectl on macOS (management machine):
+### Install kubectl on macOS (management machine):
 <br>
 <br>
 
 ```sh
 brew install kubectl
 ```
+```sh
+kubectl version --client
+```
 <br>
-<br>
-
-Displays the shell you are currently using
+Check which shell you are using
 
 ```sh
 echo $SHELL
 ```
-<br>
 <br>
 
 If you use zsh:
@@ -25,77 +25,67 @@ echo 'source <(kubectl completion zsh)' >> ~/.zshrc
 source ~/.zshrc
 ```
 <br>
-<br>
 
 Creates a k alias for kubectl.
-<br>
 <br>
 
 ```sh
 echo 'alias k=kubectl' >> ~/.zshrc
 source ~/.zshrc
 ```
-
-
-
+<br>
 
 ### Before you begin:
-<br>
 <ul>
-  <li>A compatible Linux host (I use the prefered OS Ubuntu LTS 26.04 because most</li>
-  <li>Kubernetes development is done on Ubuntu)</li>
+  <li>A compatible Linux host. This guide uses Ubuntu Server 26.04 LTS."</li>
   <li>2GB or more RAM</li>
   <li>2 CPUs or more for control plane machines</li>
   <li>Full network connectivity</li>
   <li>Unique hostname, MAC address</li>
-  <li>Certain ports open</li>
+  <li>Required Kubernetes ports must be open between the control-plane and worker nodes</li>
 </ul>
 <br>
 
-### Prefered OS: 
-<br>
-Ubuntu Server LTS 26.04 (<i>because most Kubernetes development is done on Ubuntu</i>)
-<br>
+### Prefered Operating system: 
+
+Ubuntu Server LTS 26.04
 <br>
 
 ### Install Ubuntu Server:
-<br>
+
+Perform the following steps on every control-plane and worker node before initializing or joining the cluster
 <ul>
   <li>Install Ubuntu Server</li>
-  <li>Set static ip during installation</li>
-  <li>Set time</li>
+  <li>Configure a static ip address during installation</li>
+  <li>Set the timezone</li>
   
   ```sh
   sudo timedatectl set-timezone Europe/Amsterdam
   ```
 
   <li>Reboot</li>
-</ul>
-<ul>
-<li>Login</li>
-<li>Update Ubuntu Server</li>
+  <li>Login</li>
+  <li>Update Ubuntu Server</li>
 </ul>
 <br>
 
 ### Update Ubuntu Server:
-<br>
 
 ```sh
 sudo apt-get update && sudo apt-get upgrade -y 
 ```
+Reboot the node if a kernel update was installed.
 <br>
 
 ### Set hostname:
-<br>
 
 ```sh
 sudo hostnamectl set-hostname "new-hostname"
 ```
 <i>example: k8s-cp-1</i>
 <br>
-<br>
 
-<li>Check hostname</li>
+Check hostname
 <br>
 
 ```sh
@@ -103,8 +93,7 @@ hostname
 ```
 <br>
 
-### disable linux swap and remove any existing swap partitions:
-<br>
+### disable linux swap:
 
 ```sh
 sudo swapoff -a
@@ -112,9 +101,15 @@ sudo swapoff -a
 ```sh
 sudo sed -i '/\sswap\s/ s/^\(.*\)$/#\1/g' /etc/fstab
 ```
+```sh
+swapon --show
+```
+If the command returns no output, swap is disabled successfully
 <br>
 
-### Setting up container runtime prereq:
+### Set up container runtime prerequisites.
+
+Load the required kernel modules and configure them to load automatically after a reboot.
 <br>
 
 ```sh
@@ -130,16 +125,14 @@ sudo modprobe br_netfilter
 ```
 <br>
 
-### Setup required sysctl params, these persist across reboots:
-<br>
+### Configure required sysctl parameters. These persist across reboots.
 
 ```sh
 echo -e "net.bridge.bridge-nf-call-iptables = 1\nnet.ipv4.ip_forward = 1\nnet.bridge.bridge-nf-call-ip6tables = 1" | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf > /dev/null
 ```
 <br>
 
-### Apply sysctl params without reboot:
-<br>
+### Apply the sysctl parameters without rebooting.
 
 ```sh
 sudo sysctl --system
@@ -147,7 +140,6 @@ sudo sysctl --system
 <br>
 
 ### Install containerd:
-<br>
 
 ```sh
 sudo apt-get update
@@ -155,11 +147,9 @@ sudo apt-get install -y containerd
 ```
 <br>
 
+### Configure containerd.
 
-### Set containerd config:
-<br>
-
-<li>Check if SystemdCgroup = true</li>
+<li>Check whether SystemdCgroup is set to true</li>
 <br>
 
 ```sh
@@ -167,7 +157,7 @@ sudo containerd config dump | grep SystemdCgroup
 ```
 <br>
 
-<li>if false do</li>
+<li>If the output is not SystemdCgroup = true, run the following commands</li>
 <br>
 
 ```sh
@@ -179,9 +169,6 @@ containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
 ```sh
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 ```
-```sh
-sudo containerd config dump | grep SystemdCgroup
-```
 <br>
 
 <li>Check / if true proceed futher / if not true do the steps above</li>
@@ -192,11 +179,14 @@ sudo systemctl enable --now containerd
 sudo systemctl restart containerd
 ```
 <br>
-
-### Add kubernetes repository:
+```sh
+sudo containerd config dump | grep SystemdCgroup
+```
 <br>
 
-<li>check latest release</li>
+### Add kubernetes repository:
+
+<li>This guide uses Kubernetes v1.36. If you use a different Kubernetes minor version, update the repository URL accordingly</li>
 <br>
 
 ```sh
@@ -206,7 +196,12 @@ curl -L -s https://dl.k8s.io/release/stable.txt
 
 <li>add repo, adjust version</li>
 <br>
-
+```sh
+sudo apt-get install -y ca-certificates curl gpg
+```
+```sh
+sudo mkdir -p -m 755 /etc/apt/keyrings
+```
 ```sh
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 ```
@@ -215,7 +210,7 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 ```
 <br>
 
-<li>check if repo is added</li>
+<li>Verify that the Kubernetes repository was added successfully</li>
 <br>
 
 ```sh
@@ -226,7 +221,7 @@ cat /etc/apt/sources.list.d/kubernetes.list
 <br>
 <br>
 
-<li>Update repositories</li>
+<li>Update the package index</li>
 <br>
 
 ```sh
@@ -235,7 +230,6 @@ sudo apt update
 <br>
 
 ### Install Kubernetes packages:
-<br>
 
 ```sh
 sudo apt install -y kubelet kubeadm kubectl
@@ -244,12 +238,17 @@ sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 ```sh
+sudo systemctl enable --now kubelet
+```
+Run the following command only on the first control-plane node.
+```sh
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
-<br>
-<br>
+The pod network CIDR 10.244.0.0/16 is used by Flannel. Do not use a range that overlaps with your local network.
 
-To start using your cluster, you need to run the following as a regular user:
+After the control-plane node is initialized successfully, kubeadm displays a kubeadm join command. Save this command, as it is required to add worker nodes to the cluster. The join token expires after twenty-four hours; if it has expired, generate a new join command on the control-plane node.
+
+On the control-plane node, configure kubectl for your regular user.
 <br>
 ```sh
 mkdir -p $HOME/.kube
@@ -262,7 +261,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 <br>
 
-Alternatively, if you are the root user, you can run:
+If you are logged in as the root user, set the following environment variable instead.
 <br>
 ```sh
 export KUBECONFIG=/etc/kubernetes/admin.conf
@@ -281,58 +280,121 @@ unset KUBECONFIG
 ```
 <br>
 
-### Install CNI (Flannel) via manifest:
-## Flannel is a simple CNI plugin suitable for homelabs, learning environments, and small Kubernetes clusters. For       production environments, consider alternatives such as Cilium or Calico, depending on your networking and security requirements.
+### Install the Flannel CNI plugin.
+
+Flannel is a simple CNI plugin suitable for homelabs, learning environments, and small Kubernetes clusters. For       production environments, consider alternatives such as Cilium or Calico, depending on your networking and security requirements.
 <br>
 
 ```sh
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 <br>
-Check if Flannel is running<br>
+Verify that Flannel is running.
 <br>
 
 ```sh
 kubectl get nodes
 ```
+All nodes should show the status Ready.
+
 ```sh
 kubectl get pods -n kube-flannel
 ```
+All Flannel pods should show the status Running.
 <br>
 
 ### Uninstall Flannel:
-<br>
 
 ```sh
 kubectl delete -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
+<br>
 
+### Install MetalLB
 
-
-
-### Install MetalLB via manifest:
-## MetalLB is a commonly used load balancer implementation for bare-metal Kubernetes clusters. Kubernetes does not include a load balancer for bare-metal environments by default. MetalLB provides external IP addresses for Services of type LoadBalancer.
+MetalLB is a commonly used load balancer implementation for bare-metal Kubernetes clusters. Kubernetes does not include a load balancer for bare-metal environments by default. MetalLB provides external IP addresses for Services of type LoadBalancer.
 <br>
 
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.16.1/config/manifests/metallb-native.yaml
 ```
 <br>
-
-<li>Check version installed</li>
-<br>
-
+Verify the installed MetalLB version.
 ```sh
 kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template.spec.containers[0].image}'
 ```
 <br>
 
-### Add worker to control plane:
+Configure a MetalLB IP address pool.
+
+Choose a free IP range from your local network that is outside your DHCP pool. Replace <YOUR_FREE_IP_RANGE> in the manifest below before applying it.
+
+Create the file on the management machine where kubectl is configured. In this guide, the file is stored at ~/kubernetes-manifests/metallb-config.yaml.
+
+```sh
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadatßa:
+  name: lan-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - <YOUR_FREE_IP_RANGE>
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: lan-advertisement
+  namespace: metallb-system
+```
+
+```sh
+kubectl apply -f ~/kubernetes-manifests/metallb-config.yaml
+```
+
+```sh
+kubectl get ipaddresspools -n metallb-system
+```
+
+The output should show the lan-pool IP address pool. MetalLB can now assign addresses from the configured range to Services of type LoadBalancer.
 <br>
 
+### Test MetalLB with an example service
+
+Deploy a test application and expose it using a Service of type LoadBalancer:
+```sh
+kubectl create deployment nginx --image=nginx
+```
+```sh
+kubectl expose deployment nginx --type=LoadBalancer --port=80
+```
+
+Verify that MetalLB assigned an external IP address:
+```sh
+kubectl get services
+```
+The nginx service should show an EXTERNAL-IP from the IP address range configured in lan-pool.
+
+To remove the test application after verification:
+```sh
+kubectl delete service nginx
+```
+```sh
+kubectl delete deployment nginx
+```
+<br>
+
+### Add a worker node to the cluster.
+
+Complete all node preparation steps on the worker node before joining it to the cluster.
+```sh
+sudo kubeadm token create --print-join-command
+```
+Copy the generated kubeadm join command and run it on the worker node to add it to the cluster.
 ```sh
 sudo kubeadm join (command showed during kubadm init)
 ```
-<br>
-<i>example: sudo kubeadm join 192.168.1.3:6443 --token s2qk11mjmkdghtjklicwqrquz9l --discovery-token-ca-cert-hash sha256:c8183f87425a00639c345cv7fc247fe5g3h7324cbe80e02e3601ca5135dc66</i>
-<br>
+```sh
+kubectl get nodes
+```
+After the control-plane node is initialized successfully, kubeadm displays a kubeadm join command. Save this command, as it is required to add worker nodes to the cluster. The join token expires after 24 hours; if it has expired, generate a new join command on the control-plane node.
