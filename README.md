@@ -1,5 +1,3 @@
-# My Kubernetes Cluster.
-
 ![Kubernetes](images/Kubernetes-logo.png)
 
 Currently, I'm focusing on learning Kubernetes. I first experimented with Docker on CentOS when I was using ClearOS. Since then, I’ve been fascinated by container technology.
