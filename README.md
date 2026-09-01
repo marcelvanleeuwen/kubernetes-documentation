@@ -11,6 +11,8 @@ A homelab is a great place to build, break, and fix things and to keep learning.
 
 [Install kubectl on management machine](install_kubectl_on_management_machine.md)
 
+[Configure Kubernetes Access on macOS](configure_k8s_access.md)
+
 [Install Argo CD](install_argo_cd.md)
 
 [Reset cluster](reset_cluster.md)
