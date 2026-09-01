@@ -9,17 +9,22 @@ Flannel is a simple CNI plugin suitable for homelabs, learning environments, and
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 <br>
+
 Verify that Flannel is running.
 <br>
 
 ```sh
 kubectl get nodes
 ```
+<br>
+
 All nodes should show the status Ready.
 
 ```sh
 kubectl get pods -n kube-flannel
 ```
+<br>
+
 All Flannel pods should show the status Running.
 <br>
 
@@ -39,7 +44,9 @@ MetalLB is a commonly used load balancer implementation for bare-metal Kubernete
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.16.1/config/manifests/metallb-native.yaml
 ```
 <br>
+
 Verify the installed MetalLB version.
+
 ```sh
 kubectl get deployment -n metallb-system controller -o jsonpath='{.spec.template.spec.containers[0].image}'
 ```
@@ -66,7 +73,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    - `<YOUR_FREE_IP_RANGE>`
+    - "Free ip range" 
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -74,16 +81,22 @@ metadata:
   name: lan-advertisement
   namespace: metallb-system
 ```
+<br>
+
+<i>example: 192.168.5.0/24</i>
+<br>
 
 Save the file and exit the editor before applying the configuration.
 
 ```sh
 kubectl apply -f ~/kubernetes-manifests/metallb-config.yaml
 ```
+<br>
 
 ```sh
 kubectl get ipaddresspools -n metallb-system
 ```
+<br>
 
 The output should show the lan-pool IP address pool. MetalLB can now assign addresses from the configured range to Services of type LoadBalancer.
 <br>
@@ -91,6 +104,7 @@ The output should show the lan-pool IP address pool. MetalLB can now assign addr
 ### Test MetalLB with an example service:
 
 Deploy a test application and expose it using a Service of type LoadBalancer:
+
 ```sh
 kubectl create deployment nginx --image=nginx
 ```
@@ -99,11 +113,12 @@ kubectl expose deployment nginx --type=LoadBalancer --port=80
 ```
 
 Verify that MetalLB assigned an external IP address:
+
 ```sh
 kubectl get services
 ```
 
-The EXTERNAL-IP may briefly show pending; wait until it shows an address from lan-pool.'
+The EXTERNAL-IP may briefly show pending; wait until it shows an address from lan-pool.
 
 The nginx service should show an EXTERNAL-IP from the IP address range configured in lan-pool.
 
