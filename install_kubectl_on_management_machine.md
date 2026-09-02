@@ -1,7 +1,7 @@
 # Install kubectl on management machine:
 <br>
 
-### macOS:
+### MacOS:
 
 This section describes how to install and configure kubectl on a macOS management machine.
 
