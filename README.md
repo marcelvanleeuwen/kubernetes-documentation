@@ -1,8 +1,8 @@
 ![Kubernetes](images/Kubernetes-logo.png)
 
-Currently, I'm focusing on learning Kubernetes. I first experimented with Docker on CentOS when I was using ClearOS. Since then, I’ve been fascinated by container technology.
+Currently, I'm focusing on learning Kubernetes. A homelab is a great place to build, break, and fix things and to keep learning.
 
-A homelab is a great place to build, break, and fix things and to keep learning.
+---
 <br>
 
 [Install Kubernetes bare metal](install_kubernetes.md)
