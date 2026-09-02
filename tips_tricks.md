@@ -1,40 +1,6 @@
-# Tips & Trick
-<br>
-
-### Install kubectl and control your cluster from MacOS:
-<br>
-
-Install Kubectl:<br>
-<br>
-
-```sh
-brew install kubectl
-```
-<br>
-
-```sh
-mkdir -p /Users/{username}/.kube
-```
-<br>
-
-Copy config file to MacOS:<br>
-<br>
-
-```sh
-scp sysopmarcel@192.168.x.xxx:~/.kube/config ~/.kube/config
-```
-<br>
-
-Test:<br>
-<br>
-
-```sh
-kubectl get nodes
-```
-<br>
+# Tips & Tricks
 
 ### Change roles label:
-<br>
 
 ```sh
 kubectl label node k8s-worker node-role.kubernetes.io/worker=worker
@@ -42,18 +8,15 @@ kubectl label node k8s-worker node-role.kubernetes.io/worker=worker
 <br>
 
 ### Command to add node. Execute this on the control plane.
-<br>
 
 ```sh
 kubeadm token create --print-join-command --ttl 0
 ```
-<br>
-Use output to add node. So execute this command on the node to add.
-<br>
+
+<i>Use output to add node. So execute this command on the node to add.</i>
 <br>
 
 ### Install HomeBrew
-<br>
 
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -68,7 +31,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 ### Add an alias to shorten the kubectl command
 
-add the folowing to ~/.zhsrc
+add the folowing to ~/.zshrc
 
 ```sh
 alias k='kubectl'
@@ -99,5 +62,5 @@ sudo cat /etc/kubernetes/manifests/kube-controller-manager.yaml
 #### Check if Kubelet is runing and show options
 
 ```sh
-ps -aux | grep kubelet
+ps aux | grep kubelet
 ```
